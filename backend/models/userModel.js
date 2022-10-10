@@ -8,7 +8,7 @@ mongoose.connect(db_url)
         console.log("connexion done!")
     })
     .catch( err => { 
-           console.log("error: " + err)
+        console.log("error: " + err)
     })
 
 const userSchema = new Schema({
