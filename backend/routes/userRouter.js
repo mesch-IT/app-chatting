@@ -6,7 +6,7 @@ const passport = require('passport')
 require("../controllers/passport")
 
 
-router.get("/users/secret",passport.authenticate("jwt",{session : false}),secretRoute)
+router.get("/users/home",passport.authenticate("jwt",{session : false}),secretRoute)
 
 router.post("/users/login",login)
 

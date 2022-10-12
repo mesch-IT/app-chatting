@@ -36,10 +36,14 @@ const login = (req, res) => {
     User.findOne({ username: req.body.username})
         .then((user) => { 
            if (!user) {
-             console.log("User not found")
+               res.status(401).send({
+                   message: "user not found"
+               })
            }
             if (req.body.password !== user.password) {
-                console.log("Password incorrect")
+                res.status(401).send({
+                    message : "Invalid password"
+                })
             } else {
                 const payload = {
                     username: user.username,
