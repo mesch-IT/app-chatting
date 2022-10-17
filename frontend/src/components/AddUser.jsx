@@ -12,8 +12,8 @@ const AddUser = () => {
         event.preventDefault()
 
         // check if all fields are empty
-        if ((event.target[0].value == "") || (event.target[1].value == "") ||
-            (event.target[2].value == "")) {
+        if ((event.target[0].value === "") || (event.target[1].value ==="") ||
+            (event.target[2].value === "")) {
             setUsername("")
             setPassword("")
             setConfirmPassword("")
@@ -27,7 +27,7 @@ const AddUser = () => {
             }
             axios({
                 method: 'post',
-                url: 'http://localhost:3001/users',
+                url: 'http://localhost:3001/users/register',
                 data: body
             })
                 .then((res) => {

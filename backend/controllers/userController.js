@@ -52,7 +52,9 @@ const login = (req, res) => {
                 const token = jwt.sign(payload, "mykey", { expiresIn: "1d" })
                 return res.status(200).json({
                     message: "login successfully",
-                    token: "Bearer " + token
+                    token: "Bearer " + token,
+                    user: user.username,
+                    id : user._id
                 })
             }
 
@@ -67,16 +69,19 @@ const login = (req, res) => {
 
 const secretRoute = (req, res) => { 
     
-    return res.status(200).send({
-        user: {
-            id: req.user._id,
-            username: req.user.username
-            }
-    })
+    return res.status(200)
+               
+}
+
+const getAllUser = async (req, res) => { 
+
+    const users = await User.find({ _id: { $ne: req.params.id } })
+        res.json(users)
 }
 
 module.exports = {
     addUser,
     login,
-    secretRoute
+    secretRoute,
+    getAllUser
 }

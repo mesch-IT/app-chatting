@@ -44,7 +44,7 @@ const ConnexionPage = () => {
             data: body
         })
             .then((user) => {
-                localStorage.setItem('token', user.data.token)
+                localStorage.setItem('user', JSON.stringify(user))
                 navigate("/users/home")
             })
             .catch((err) => {

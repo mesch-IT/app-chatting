@@ -1,16 +1,18 @@
 const router = require('express').Router()
 const { check} = require('express-validator')
-const { addUser, login, secretRoute } = require('../controllers/userController')
+const { addUser, login, secretRoute, getAllUser } = require('../controllers/userController')
 const passport = require('passport')
 
 require("../controllers/passport")
 
 
-router.get("/users/home",passport.authenticate("jwt",{session : false}),secretRoute)
+router.get("/home", passport.authenticate("jwt", { session: false }), secretRoute)
 
-router.post("/users/login",login)
+router.get("/:id",getAllUser)
 
-router.post("/users",[
+router.post("/login",login)
+
+router.post("/register",[
     check("username").notEmpty()
         .withMessage('username is required')
         .isLength({ min: 3 })

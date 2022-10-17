@@ -21,18 +21,45 @@ const userChats = (req, res) => {
     ChatModel.find({
         members: { $in: [req.params.userId] }
     })
-        .then((resultat) => res.status(200).json(resultat))
+        .then((resultat) => {
+            res.status(200).json(resultat)
+            
+        } )
+   
         .catch((err) => res.status(500).json(err))
 }
 
-const findChat = (req, res) => { 
+const findChat = async (req, res) => { 
 
-    ChatModel.findOne({
+    const chat = await  ChatModel.findOne({
         members : {$all : [req.params.firstId,req.params.secondId]}
     })
-        .then((resultat) => res.status(200).json(resultat))
-        .catch((err) => res.status(500).json(err))
+
+    if (!chat) {
+        res = new ChatModel({
+            senderId: req.params.firstId,
+            receiverId: req.params.secondId
+        })
+
+        res.save()
+            .then(() => { 
+             
+            })
+    } else {
+        res.status(200).json(chat)
+    }
+
+ 
+
+    // ChatModel.findOne({
+    //     members : {$all : [req.params.firstId,req.params.secondId]}
+    // })
+    //     .then((resultat) => res.status(200).json(resultat))
+        
+    //     .catch((err) => res.status(500).json(err))
 }
+
+
 
 module.exports = {
     createChat,
