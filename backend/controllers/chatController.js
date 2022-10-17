@@ -35,19 +35,7 @@ const findChat = async (req, res) => {
         members : {$all : [req.params.firstId,req.params.secondId]}
     })
 
-    if (!chat) {
-        res = new ChatModel({
-            senderId: req.params.firstId,
-            receiverId: req.params.secondId
-        })
-
-        res.save()
-            .then(() => { 
-             
-            })
-    } else {
         res.status(200).json(chat)
-    }
 
  
 

@@ -1,58 +1,39 @@
+import React, { useState } from 'react'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-const ConnexionPage = () => {
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
+
+const Connexion = () => {
+
     let navigate = useNavigate()
 
-    const [username, setUsername] = useState("")
+    const [username,setUsername] = useState("")
     const [password, setPassword] = useState("")
-
-
-    useEffect(() => {
-        const token = localStorage.getItem('token')
-        axios({
-            method: 'get',
-            url: 'http://localhost:3001/users/home',
-            headers: {
-                Authorization: token
-            }
-        })
-            .then((res) => {
-                console.log(res)
-                navigate("/users/home")
-            })
-            .catch((err) => {
-                console.log("err", err)
-                navigate("/users/login")
-            })
-    }, [])
     
-    const login = (event) => { 
 
+    const login = (event) => {
         event.preventDefault()
-        console.log(username)
-        console.log(password)
 
         let body = {
             username,
             password
         }
-
         axios({
-            method: 'post',
-            url: 'http://localhost:3001/users/login',
+            method: "POST",
+            url: "http://localhost:3001/users/login",
             data: body
         })
             .then((user) => {
-                localStorage.setItem('user', JSON.stringify(user))
+                localStorage.setItem("user", JSON.stringify(user))
                 navigate("/users/home")
             })
-            .catch((err) => {
-                console.log("err", err)
+            .catch((err) => { 
+                console.log("you are not logged in",err)
             })
     }
+    
     return (
-
         <div className='main'>
             <img src="girl-logging.svg" className='img-illustration' alt="" />
             <div className='form-card'>
@@ -75,11 +56,12 @@ const ConnexionPage = () => {
                             }} />
                     </div>
                     <div><button className='btn-sign-up'>Sign In</button></div>
-                    
+
                 </form>
             </div>
         </div>
+
     )
 }
 
-export default ConnexionPage
+export default Connexion
