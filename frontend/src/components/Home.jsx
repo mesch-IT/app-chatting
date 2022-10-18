@@ -55,7 +55,9 @@ const Home = () => {
             .catch((err) => { 
                 console.log("we can't get users", err)
             })
-    },[])
+    }, [])
+    
+    
 
     return (
           

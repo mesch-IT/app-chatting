@@ -1,15 +1,18 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import profile from "../img/contact.png"
+import InputEmoji from "react-input-emoji"
 
-const ChatBox = ({ userSelected,currentUser}) => {
+const ChatBox = ({ userSelected, currentUser }) => {
 
     const [chat, setChat] = useState("")
     const [messages, setMessages] = useState([])
+    const [sendMessage,setSendMessage] = useState("")
 
-    
 
-    // get chat 
+
+
+    // get chat  and all messages
     useEffect(() => {
         axios({
             method: 'get',
@@ -17,20 +20,18 @@ const ChatBox = ({ userSelected,currentUser}) => {
         })
             .then((data) => {
 
-                    setChat(data.data._id)
-                
+                setChat(data.data._id)
+
             })
             .catch((err) => {
-                console.log("err", err)
+                console.log("error to get chat", err)
             })
+     
     }, [userSelected])
 
-    
+    // get messages
 
-    console.log("chat selected",chat)
-   // get messages
-
-    useEffect(() => {
+    useEffect(() => { 
         axios({
             method: 'get',
             url: `http://localhost:3001/message/${chat}`,
@@ -42,11 +43,47 @@ const ChatBox = ({ userSelected,currentUser}) => {
             .catch((err) => {
                 console.log("err", err)
             })
-    }, [chat])
-    if (Object.keys(messages).length > 0) {
-        console.log("messages ", messages)
-    }
+    },[chat])
 
+
+    const allMessages = messages?.data?.map(message => {
+        let statutMessage = currentUser === message.senderId ? 'outcome' : 'income'
+        const d = new Date(message.createdAt);
+       let date = d.getHours() + ":" + d.getMinutes() + ", " + d.toDateString()
+
+        return (
+            <div key={message._id} className={statutMessage}>
+                <div className="message">{message.text}</div>
+                <div className="timestamp">{date}</div>
+            </div>
+        )
+
+    })
+
+    const newMessage = (event) => {
+        event.preventDefault()
+
+        let body = {
+            chatId: chat,
+            senderId: currentUser,
+            text : sendMessage
+
+        }
+        
+        axios({
+            method: 'POST',
+            url: `http://localhost:3001/message/`,
+            data: body
+
+        })
+            .then(() => {
+                console.log("message sent successfully")
+            })
+            .catch(err => { 
+                console.log("error sending")
+            })
+        sendMessage("")
+    }
     return (
         <>
 
@@ -62,36 +99,30 @@ const ChatBox = ({ userSelected,currentUser}) => {
                     </div>
                 </div>
                 <div className="chatt_body">
-                    <div className="income">
-                        <div className="message">Hey there !</div>
-                        <div className="timestamp">Today, 2:0pm</div>
-                    </div>
-                    <div className="income">
-                        <div className="message">How are you doing ?</div>
-                        <div className="timestamp">Today, 2:0pm</div>
-                    </div>
-                    <div className="outcome">
-                        <div className="message">Hello...</div>
-                        <div className="timestamp">Today, 2:0pm</div>
-                    </div>
-                    <div className="outcome">
-                        <div className="message">I'm good and what about you?</div>
-                        <div className="timestamp">Today, 2:0pm</div>
-                    </div>
+
+                    {allMessages}
+                   
                 </div>
-                <div className="chatt_footer">
-                    <div className="d-flex align-items-start">
-                        <div className="message_type">
-                            <input className="input_blank" name="" rows="2" />
-                            <div className="camera">
-                                <i className="las la-camera"></i>
+                <form action="" onSubmit={newMessage}>
+                    <div className="chatt_footer">
+                        <div className="d-flex align-items-start">
+                            <div className="message_type">
+                                <input className="input_blank" value={sendMessage}
+                                    name="" rows="2"
+                                    onChange={(event) => { 
+                                        setSendMessage(event.target.value)
+                                    }}
+                                />
+                                <div className="camera">
+                                    <i className="las la-camera"></i>
+                                </div>
                             </div>
+                            <button type='submit' className="btn-core">
+                                <i className="las la-paper-plane"></i>
+                            </button>
                         </div>
-                        <button className="btn-core">
-                            <i className="las la-paper-plane"></i>
-                        </button>
                     </div>
-                </div>
+            </form>
             </div>
         </>
     )

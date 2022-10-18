@@ -35,7 +35,7 @@ const findChat = async (req, res) => {
         members : {$all : [req.params.firstId,req.params.secondId]}
     })
 
-        res.status(200).json(chat)
+    chat ? res.status(200).json(chat) : res.status(404).json({MessageChannel})
 
  
 
