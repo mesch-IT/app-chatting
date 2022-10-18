@@ -12,15 +12,19 @@ const ChatBox = ({ userSelected, currentUser }) => {
 
 
 
-    // get chat  and all messages
+    // get chat
     useEffect(() => {
         axios({
-            method: 'get',
+            method: 'POST',
             url: `http://localhost:3001/chat/${currentUser}/${userSelected._id}`,
         })
             .then((data) => {
-
-                setChat(data.data._id)
+                
+                setMessages(data)
+                setChat(data.data[0].chatId)
+                
+                
+              
 
             })
             .catch((err) => {
@@ -29,21 +33,23 @@ const ChatBox = ({ userSelected, currentUser }) => {
      
     }, [userSelected])
 
-    // get messages
+    
 
-    useEffect(() => { 
-        axios({
-            method: 'get',
-            url: `http://localhost:3001/message/${chat}`,
-        })
-            .then((data) => {
-                setMessages(data)
+    // // get messages
 
-            })
-            .catch((err) => {
-                console.log("err", err)
-            })
-    },[chat])
+    // useEffect(() => { 
+    //     axios({
+    //         method: 'get',
+    //         url: `http://localhost:3001/message/${chat}`,
+    //     })
+    //         .then((data) => {
+    //             setMessages(data)
+
+    //         })
+    //         .catch((err) => {
+    //             console.log("err", err)
+    //         })
+    // },[chat])
 
 
     const allMessages = messages?.data?.map(message => {
@@ -62,6 +68,7 @@ const ChatBox = ({ userSelected, currentUser }) => {
 
     const newMessage = (event) => {
         event.preventDefault()
+
 
         let body = {
             chatId: chat,
@@ -82,7 +89,7 @@ const ChatBox = ({ userSelected, currentUser }) => {
             .catch(err => { 
                 console.log("error sending")
             })
-        sendMessage("")
+        setSendMessage("")
     }
     return (
         <>

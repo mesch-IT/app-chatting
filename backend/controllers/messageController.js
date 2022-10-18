@@ -19,24 +19,10 @@ const addMessage = (req, res) => {
         })
 }
 
-const getMessages = (req, res) => { 
-
-    const { chatId } = req.params
-    console.log(chatId)
-    
-    MessageModel.find({ chatId })
-        .then((data) => {
-            res.status(200).json(data)
-        })
-        .catch(err => {
-            res.status(500).json({error: err.message})
-        })
-}
 
 
  
 module.exports = {
-    addMessage,
-    getMessages
+    addMessage
 }
 
