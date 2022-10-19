@@ -8,6 +8,7 @@ let activeUsers = []
 
 io.on("connection", (socket) => {
     
+    
     //add new user
     socket.on("new-user", (newUserId) => {
 
@@ -23,6 +24,19 @@ io.on("connection", (socket) => {
         console.log("connected users",activeUsers)
         io.emit('get-users',activeUsers)
     })
+
+    // send message
+    socket.on("send-message", (data) => {
+
+         
+        const user = activeUsers.find(user => user.userId === data.receiverId)
+       
+        if (user) {
+            console.log("user", user.userId)
+            io.to(user.socketId).emit("receive-message",data)
+        }
+    })
+
     socket.on('disconnect', () => {
         activeUsers = activeUsers.filter(user => user.socketId !== socket.id)
         

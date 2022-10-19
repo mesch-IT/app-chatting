@@ -1,16 +1,36 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import profile from "../img/contact.png"
 import InputEmoji from "react-input-emoji"
+import { io } from "socket.io-client"
+import ScrollToBottom from "react-scroll-to-bottom"
 
 const ChatBox = ({ userSelected, currentUser }) => {
 
     const [chat, setChat] = useState("")
     const [messages, setMessages] = useState([])
-    const [sendMessage,setSendMessage] = useState("")
+    const [sendMessage, setSendMessage] = useState("")
+    const [onlineUsers, setOnlineUsers] = useState([])
+    const socket = useRef()
+    let receiverId = ""
+
+    let socketData = {}
 
 
+    useEffect(() => { 
 
+        socket.current = io("http://localhost:8800")
+
+        socket.current.emit("new-user", currentUser)
+        
+        socket.current.on("get-users", (users) => {
+            setOnlineUsers(users)
+            console.log(onlineUsers)
+        })
+
+    }, [currentUser])
+    
+    
 
     // get chat
     useEffect(() => {
@@ -31,43 +51,13 @@ const ChatBox = ({ userSelected, currentUser }) => {
                 console.log("error to get chat", err)
             })
      
-    }, [userSelected])
-
-    
-
-    // // get messages
-
-    // useEffect(() => { 
-    //     axios({
-    //         method: 'get',
-    //         url: `http://localhost:3001/message/${chat}`,
-    //     })
-    //         .then((data) => {
-    //             setMessages(data)
-
-    //         })
-    //         .catch((err) => {
-    //             console.log("err", err)
-    //         })
-    // },[chat])
+    }, [userSelected,messages])
 
 
-    const allMessages = messages?.data?.map(message => {
-        let statutMessage = currentUser === message.senderId ? 'outcome' : 'income'
-        const d = new Date(message.createdAt);
-       let date = d.getHours() + ":" + d.getMinutes() + ", " + d.toDateString()
-
-        return (
-            <div key={message._id} className={statutMessage}>
-                <div className="message">{message.text}</div>
-                <div className="timestamp">{date}</div>
-            </div>
-        )
-
-    })
 
     const newMessage = (event) => {
         event.preventDefault()
+     
 
 
         let body = {
@@ -79,18 +69,68 @@ const ChatBox = ({ userSelected, currentUser }) => {
         
         axios({
             method: 'POST',
-            url: `http://localhost:3001/message/`,
+            url: `http://localhost:3001/message/newMessage`,
             data: body
 
         })
-            .then(() => {
-                console.log("message sent successfully")
+            .then((data) => {
+                console.log("message sent successfully", data)
+                setMessages([...messages, data.data])
             })
             .catch(err => { 
                 console.log("error sending")
             })
-        setSendMessage("")
+      
+       
+        
+    
+
+        
+        
+        // setSendMessage("")
     }
+      // send message to socket server 
+   
+
+    useEffect(() => {
+      
+        receiverId = userSelected._id
+        socketData = {
+            sendMessage,
+            receiverId,
+            chat
+        }
+
+        socket.current.emit("send-message",socketData)
+
+    }, [sendMessage])
+    
+    // receive message from socket server
+
+    useEffect(() => {
+        socket.current.on("receive-message", (data) => {
+            console.log("Received message",data)
+        })
+    },[sendMessage])
+
+    
+    const allMessages = messages?.data?.map(message => {
+
+        let statutMessage = currentUser === message.senderId ? 'outcome' : 'income'
+
+        const d = new Date(message.createdAt)
+        let date = d.getHours() + ":" + d.getMinutes() + ", " + d.toDateString()
+
+        return (
+
+            <div key={message._id} className={statutMessage}>
+                <div className="message">{message.text}</div>
+                <div className="timestamp">{date}</div>
+            </div>
+
+        )
+
+    })
     return (
         <>
 
@@ -105,11 +145,11 @@ const ChatBox = ({ userSelected, currentUser }) => {
                         <span className="small_light">Online</span>
                     </div>
                 </div>
-                <div className="chatt_body">
+                <ScrollToBottom className="chatt_body">
 
                     {allMessages}
                    
-                </div>
+                </ScrollToBottom>
                 <form action="" onSubmit={newMessage}>
                     <div className="chatt_footer">
                         <div className="d-flex align-items-start">
