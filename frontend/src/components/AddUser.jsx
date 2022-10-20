@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-
+import { useNavigate } from 'react-router-dom';
 const AddUser = () => {
+    let navigate = useNavigate()
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -36,10 +37,13 @@ const AddUser = () => {
                 .catch((err) => {
                     console.log("err", err)
                 })
+            navigate("/users/login")
         }
         setUsername("")
         setPassword("")
         setConfirmPassword("")
+
+        
 
     }
 

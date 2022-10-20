@@ -22,7 +22,7 @@ const addUser = (req, res) => {
 
         newUser.save()
             .then(() => {
-                res.status(201).json({ "message": "user added successfully" })
+                res.status(201)
             })
             .catch(err => {
                 res.status(400).json({ "message": "error creating user " + err.message })

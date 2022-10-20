@@ -57,7 +57,12 @@ const Home = () => {
             })
     }, [])
     
-    
+    const logout = () => {
+        
+        localStorage.removeItem('user')
+        navigate("/users/login")
+        
+    }
 
     return (
           
@@ -79,7 +84,7 @@ const Home = () => {
                     </div>
 
                     <div className="bottom_sidebar">
-                        <div className="sign_out">
+                        <div className="sign_out" onClick={logout}>
                             <i className="las la-sign-out-alt"></i>
                         </div>
                     </div>

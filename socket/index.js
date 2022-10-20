@@ -26,13 +26,14 @@ io.on("connection", (socket) => {
 
     // send message
     socket.on("send-message", (data) => {
-
+        console.log("user", data)
          
         const user = activeUsers.find(user => user.userId === data.receiverId)
        
         if (user) {
-            console.log("user", user.userId)
-            io.to(user.socketId).emit("receive-message",data)
+            console.log("userS", data)
+             console.log("coucou")
+            // io.to(user.socketId).emit("receive-message",data)
         }
     })
 

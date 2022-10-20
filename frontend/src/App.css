@@ -302,3 +302,15 @@ img.cover {
   font-size: .75rem;
 }
 
+.create-account {
+
+  margin-top: 20px;
+  width: 70%;
+
+
+}
+.create-account:hover{
+
+  color: #1966FF;
+  cursor: pointer;
+}

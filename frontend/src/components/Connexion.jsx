@@ -33,6 +33,11 @@ const Connexion = () => {
             })
     }
     
+    const createAccount = () => {
+
+        navigate("/users/register")
+    }
+
     return (
         <div className='main'>
             <img src="girl-logging.svg" className='img-illustration' alt="" />
@@ -58,6 +63,9 @@ const Connexion = () => {
                     <div><button className='btn-sign-up'>Sign In</button></div>
 
                 </form>
+                <div>
+                    <p className='create-account' onClick={createAccount}>Create your account here</p>
+                </div>
             </div>
         </div>
 
