@@ -37,43 +37,36 @@ const findChat = async (req, res) => {
         members : {$all : [req.params.firstId,req.params.secondId]}
     })
 
-    if (!chat) {
+    if (chat !== null) {
+        let chatId = chat._id
+        let messages = await MessageModel.find({ chatId })
+          
+        return res.status(200).json({
+            messages,
+            chatId
+          })
+        
+          
+    }
+
+    if (chat == null) {
        
         chat = new ChatModel({
             members: [req.params.firstId, req.params.secondId] 
         })
         chat.save()
-            .then((data) => { 
-                res.status(404).json({ message: "New chat created" , data: data})
-            })
-    } else {
-       let chatId = chat._id
-        MessageModel.find({ chatId})
             .then((data) => {
-                res.status(200).json(data)
-            })
-            .catch(err => {
-                res.status(500).json({ error: err.message })
-            })
+            res.status(201).json({ message: "New chat created", data: data })
+                
+            })           
     }
-
-    // chat ? res.status(200).json(chat)
-    //     :
-    // chat = new ChatModel({
-    //     members: [req.params.senderId, req.params.receiverId]
-    // })
-    // chat.save()
-    //     .then(() => { 
-    //         res.status(201).json({ message : "chat saved successfully"})
-    //     })
  
+  
 
-    // ChatModel.findOne({
-    //     members : {$all : [req.params.firstId,req.params.secondId]}
-    // })
-    //     .then((resultat) => res.status(200).json(resultat))
-        
-    //     .catch((err) => res.status(500).json(err))
+    // else {
+  
+    // }
+
 }
 
 

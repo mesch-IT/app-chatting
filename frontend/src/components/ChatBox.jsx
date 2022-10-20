@@ -25,7 +25,7 @@ const ChatBox = ({ userSelected, currentUser }) => {
         
         socket.current.on("get-users", (users) => {
             setOnlineUsers(users)
-            console.log(onlineUsers)
+            
         })
 
     }, [currentUser])
@@ -34,25 +34,34 @@ const ChatBox = ({ userSelected, currentUser }) => {
 
     // get chat
     useEffect(() => {
+        console.log("user selected", userSelected._id)
         axios({
             method: 'POST',
             url: `http://localhost:3001/chat/${currentUser}/${userSelected._id}`,
         })
             .then((data) => {
-                
-                setMessages(data)
-                setChat(data.data[0].chatId)
-                
-                
-              
 
+                
+               
+                if (data.data.messages.length == 0) {
+                    
+                    setMessages(data.data.messages)
+                    setChat(data.data.chatId)
+
+                 
+                } else { 
+                      setMessages(data.data.messages)
+                      setChat(data.data.messages[0].chatId)
+                }
+                
+             
+              
             })
             .catch((err) => {
                 console.log("error to get chat", err)
             })
      
-    }, [userSelected,messages])
-
+    }, [userSelected])
 
 
     const newMessage = (event) => {
@@ -74,7 +83,7 @@ const ChatBox = ({ userSelected, currentUser }) => {
 
         })
             .then((data) => {
-                console.log("message sent successfully", data)
+                
                 setMessages([...messages, data.data])
             })
             .catch(err => { 
@@ -87,7 +96,7 @@ const ChatBox = ({ userSelected, currentUser }) => {
 
         
         
-        // setSendMessage("")
+        setSendMessage("")
     }
       // send message to socket server 
    
@@ -103,18 +112,20 @@ const ChatBox = ({ userSelected, currentUser }) => {
 
         socket.current.emit("send-message",socketData)
 
-    }, [sendMessage])
+    }, [])
     
     // receive message from socket server
 
     useEffect(() => {
         socket.current.on("receive-message", (data) => {
-            console.log("Received message",data)
-        })
+            setMessages([...messages, data])
+            console.log(data)
+        })  
+
     },[sendMessage])
 
     
-    const allMessages = messages?.data?.map(message => {
+    const allMessages = messages?.map(message => {
 
         let statutMessage = currentUser === message.senderId ? 'outcome' : 'income'
 

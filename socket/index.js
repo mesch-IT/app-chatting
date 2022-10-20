@@ -8,7 +8,6 @@ let activeUsers = []
 
 io.on("connection", (socket) => {
     
-    
     //add new user
     socket.on("new-user", (newUserId) => {
 
