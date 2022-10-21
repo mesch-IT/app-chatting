@@ -1,9 +1,10 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import profile from "../img/contact.png"
 import AllUsers from './AllUsers'
 import ChatBox from './ChatBox'
+import { io } from "socket.io-client"
 
 const Home = () => {
 
@@ -15,6 +16,9 @@ const Home = () => {
     const [allUsers, setAllUsers] = useState([])
     const [showChat, setShowChat] = useState(false)
     const [userSelected, setUserSelected] = useState({})
+    const [chat, setChat] = useState("")
+    const [messages, setMessages] = useState([])
+    const socket = useRef()
     
     
     // connexion to home page
@@ -43,6 +47,20 @@ const Home = () => {
             })
     }, [])
     
+    // connexion to socket
+
+    // useEffect(() => {
+
+    //     socket.current = io("http://localhost:8800")
+
+    //     socket.current.emit("new-user", currentUser)
+
+    //     // socket.current.on("get-users", (users) => {
+    //     //     setOnlineUsers(users)
+
+    //     // })
+
+    // }, [currentUser])
     // get all users
     useEffect(() => {
         axios({
@@ -108,6 +126,10 @@ const Home = () => {
                             allUsers={allUsers}
                             setUserSelected={setUserSelected}
                             userSelected={userSelected}
+                            setChat={setChat}
+                            chat={chat}
+                            setMessages={setMessages}
+                            messages={messages}
                             
                         />
                      
@@ -118,6 +140,9 @@ const Home = () => {
                     showChat && <ChatBox
                         userSelected={userSelected}
                         currentUser={currentUser}
+                        setMessages={setMessages}
+                        chat={chat}
+                        messages={messages}
                      
                     />
                 }

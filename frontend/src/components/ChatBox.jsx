@@ -5,10 +5,14 @@ import InputEmoji from "react-input-emoji"
 import { io } from "socket.io-client"
 import ScrollToBottom from "react-scroll-to-bottom"
 
-const ChatBox = ({ userSelected, currentUser }) => {
+const ChatBox = ({
+    userSelected,
+    currentUser,
+    setMessages,
+    messages,
+    chat
+}) => {
 
-    const [chat, setChat] = useState("")
-    const [messages, setMessages] = useState([])
     const [sendMessage, setSendMessage] = useState("")
     const [onlineUsers, setOnlineUsers] = useState([])
     const [socketData, setSocketData] = useState({
@@ -33,7 +37,7 @@ const ChatBox = ({ userSelected, currentUser }) => {
 
     }, [currentUser])
     
-    // send message to socket server 
+    // // send message to socket server 
 
 
     useEffect(() => {
@@ -49,47 +53,17 @@ const ChatBox = ({ userSelected, currentUser }) => {
 
     // receive message from socket server
 
-    // useEffect(() => {
-    //     socket.current.on("receive-message", (data) => {
-    //         setMessages([...messages, data])
-    //         console.log(data)
-    //     })
-
-    // },[sendMessage])
-
-    // get chat
     useEffect(() => {
-        axios({
-            method: 'POST',
-            url: `http://localhost:3001/chat/${currentUser}/${userSelected._id}`,
+        socket.current.on("receive-message", (data) => {
+            setMessages([...messages, data.textSend])
+            console.log(messages)
         })
-            .then((data) => {
 
-                
-               
-                if (data.data.messages.length !== 0) {
-
-                    setMessages(data.data.messages)
-                    setChat(data.data.messages[0].chatId)
-
-                    
-                } 
-
-                if (data.data.messages.length == 0) {
-                    setMessages(data.data.messages)
-                    setChat(data.data.chatId)                 
-                }
-                
-             
-              
-            })
-            .catch((err) => {
-                console.log("error to get chat", err)
-            })
-     
-    }, [userSelected])
+    },[sendMessage])
 
 
+    
+  
     const newMessage = (event) => {
         event.preventDefault()
      

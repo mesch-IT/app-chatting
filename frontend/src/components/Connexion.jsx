@@ -15,6 +15,8 @@ const Connexion = () => {
     const login = (event) => {
         event.preventDefault()
 
+        console.log(password)
+
         let body = {
             username,
             password
