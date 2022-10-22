@@ -1,7 +1,9 @@
 const { mongoose, Schema } = require('mongoose')
 
+require('dotenv').config()
 
-db_url = "mongodb+srv://mesch:mandA1234@cluster0.crwrkvz.mongodb.net/app-chatting?retryWrites=true&w=majority"
+
+const db_url = process.env.DB_URL 
 
 mongoose.connect(db_url)
     .then(() => {

@@ -5,6 +5,7 @@ const routesUser = require('./routes/userRouter')
 const routesChat = require('./routes/chatRouter')
 const routesMessage = require('./routes/messageRouter')
 const http = require('http')
+require('dotenv').config()
 
 const { Server } = require("socket.io")
 
@@ -29,6 +30,6 @@ app.use("/users", routesUser)
 app.use("/chat", routesChat)
 app.use("/message", routesMessage)
 
-server.listen(3001, () => {
-    console.log("server listening on port 3001")
+server.listen(process.env.PORT, () => {
+    console.log("server listening")
 })
