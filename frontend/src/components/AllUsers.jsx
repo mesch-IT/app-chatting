@@ -26,18 +26,31 @@ const AllUsers = ({
         })
             .then((data) => {
 
-                if (data.data.messages.length > 0) {
+                console.log("chat id", data.data)
+                if (data.data.data) {
+                    setChat(data.data.data._id)
+                   console.log("chat id",data.data.data)
                   setMessages(data.data.messages)
-                     setChat(data.data.messages[0].chatId)
                 }
-                   if (data.data.messages.length == 0) {
-                 
-                       console.log(data.data)
+                if (data.data.messages) {
+                    setChat(data.data.messages[data.data.messages.length - 1].chatId)
+                   //console.log("chat messages", data.data.messages[0].text)
                        setMessages(data.data.messages)
-                         setChat(data.data.chatId)
+                 }
+              
+               
+                // if (data.data.messages.length > 0) {
+              
+                //      setChat(data.data.messages[0].chatId)
+                // }
+                //    if (data.data.messages.length == 0) {
+                 
+                //        console.log(data.data)
+                //        setMessages(data.data.messages)
+                //          setChat(data.data.chatId)
                    
                   
-                 }
+                //  }
               
                 
               
@@ -48,6 +61,8 @@ const AllUsers = ({
 
 
     }
+
+  
 
     const users = allUsers?.data?.map(user => {
         return (

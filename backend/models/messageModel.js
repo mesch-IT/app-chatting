@@ -7,6 +7,9 @@ const messageSchema = new Schema({
     senderId: {
         type : String
     },
+    receiverId: {
+        type: String
+    },
     text: {
         type : String
     }
