@@ -20,21 +20,56 @@ const ChatBox = ({
   const [sendMessage, setSendMessage] = useState("")
   const [socketData, setSocketData] = useState({})
   const socket = useRef()
+   let receiverId = ""
 
-  useEffect(() => {
-    socket.current = io("http://localhost:8800")
+   
 
-    socket.current.emit("new-user", currentUser)
+    useEffect(() => { 
 
-    socket.current.on("get-users", (users) => {
-      // eslint-disable-next-line no-undef
-      setOnlineUsers(users)
-    })
-  }, [currentUser])
+        socket.current = io("http://localhost:8800")
+
+        socket.current.emit("new-user", currentUser)
+        
+        socket.current.on("get-users", (users) => {
+            setOnlineUsers(users)
+            
+        })
+
+    }, [currentUser])
+    
+    // // send message to socket server 
+
+
+    // useEffect(() => {
+
+    //      if (socketData.textSend !== "") {
+    //          socket.current.emit("send-message", socketData)
+    //      }
+     
+        
+        
+
+    // }, [socketData])
+    // receive message from socket server
+
+    useEffect(() => {
+        socket.current.on("receive-message", (data) => {
+
+            console.log("socket", data)
+
+            setMessages(prevState => [...prevState, data])
+            // setMessages(prevstate => ({
+            //     ...prevstate,
+            //     data
+            // }))
+        })
+
+    }, [])
+
 
   // // send message to socket server
 
-  useEffect(() => {}, [socketData])
+
 
   // receive message from socket server
 
@@ -45,6 +80,7 @@ const ChatBox = ({
     })
   }, [sendMessage])
 
+
   const newMessage = (event) => {
     event.preventDefault()
 
@@ -53,7 +89,6 @@ const ChatBox = ({
       senderId: currentUser,
       text: sendMessage,
     }
-
     axios({
       method: "POST",
       url: `http://localhost:3001/message/newMessage`,
@@ -71,9 +106,17 @@ const ChatBox = ({
       .catch((err) => {
         console.log("error sending", err)
       })
+        setSendMessage("")
+    }
+  
+  
+    
+    
+    useEffect(() => {
 
-    setSendMessage("")
-  }
+        socket.current.emit("send-message", messages)
+    }, [messages])
+
 
   // eslint-disable-next-line react/prop-types
   const allMessages = messages?.map((message) => {

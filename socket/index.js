@@ -27,14 +27,22 @@ io.on("connection", (socket) => {
     // send message
     socket.on("send-message", (data) => {
         console.log("send message", data)
-         
-        const user = activeUsers.find(user => user.userId === data.receiverId)
-        console.log(user)
+
+        if (Object.keys(data).length > 0) {
+            console.log(data[0].receiverId)
+            const user = activeUsers.find(user => user.userId === data[0].receiverId)
+            
+
         if (user) {
-            console.log("userS", data)
-             console.log("coucou")
-            io.to(user.socketId).emit("receive-message",data)
+             console.log("user online",user)
+          //  console.log("userS", data)
+        //      console.log("coucou")
+         io.to(user.socketId).emit("receive-message",data)
+         }
         }
+         
+  
+    
     })
 
     socket.on('disconnect', () => {

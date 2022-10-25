@@ -33,13 +33,15 @@ const userChats = (req, res) => {
 
 const findChat = async (req, res) => { 
 
+    let messages
+
     let chat = await  ChatModel.findOne({
         members : {$all : [req.params.firstId,req.params.secondId]}
     })
 
     if (chat !== null) {
         let chatId = chat._id
-        let messages = await MessageModel.find({ chatId })
+         messages = await MessageModel.find({ chatId })
           
         return res.status(200).json({
             messages,
@@ -56,7 +58,11 @@ const findChat = async (req, res) => {
         })
         chat.save()
             .then((data) => {
-            res.status(201).json({ message: "New chat created", data: data })
+                res.status(201).json({
+                    message: "New chat created",
+                    data,
+                    messages
+                })
                 
             })           
     }
