@@ -1,9 +1,12 @@
+/* eslint-disable react/react-in-jsx-scope */
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import './App.css'
-import AddUser from './components/AddUser'
-import Connexion from './components/Connexion'
-import Home from './components/Home'
+// eslint-disable-next-line prettier/prettier
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+// eslint-disable-next-line prettier/prettier
+import "./App.css"
+import AddUser from "./components/AddUser"
+import Connexion from "./components/Connexion"
+import Home from "./components/Home"
 
 function App() {
   return (
