@@ -18,10 +18,6 @@ const ChatBox = ({
 }) => {
   const [sendMessage, setSendMessage] = useState("")
   //const [onlineUsers, setOnlineUsers] = useState([])
-  const [socketData, setSocketData] = useState({
-    textSend: "",
-    receiverId: "",
-  })
   const socket = useRef()
 
   useEffect(() => {
