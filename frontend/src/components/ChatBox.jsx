@@ -36,12 +36,6 @@ const ChatBox = ({
 
   // // send message to socket server
 
-  useEffect(() => {
-    if (socketData.textSend !== "") {
-      socket.current.emit("send-message", socketData)
-    }
-  }, [socketData])
-
   // receive message from socket server
 
   useEffect(() => {
@@ -67,12 +61,7 @@ const ChatBox = ({
     })
       .then((data) => {
         setMessages([...messages, data.data])
-        setSocketData((prevState) => ({
-          ...prevState,
-          textSend: data.data.text,
-          // eslint-disable-next-line react/prop-types
-          receiverId: userSelected._id,
-        }))
+        socket.current.emit("send-message", messages)
       })
       .catch((err) => {
         console.log("error sending", err)
