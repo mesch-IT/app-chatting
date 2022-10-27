@@ -22,13 +22,15 @@ const ChatBox = ({
 
   useEffect(() => {
     socket.current = io("http://localhost:8800")
+    console.log("chat", chat)
 
     socket.current.emit("new-user", currentUser)
+    socket.current.emit("join-room", chat)
 
     // socket.current.on("get-users", (users) => {
     //  // setOnlineUsers(users)
     // })
-  }, [currentUser])
+  }, [chat])
 
   // // send message to socket server
 
@@ -36,10 +38,10 @@ const ChatBox = ({
 
   useEffect(() => {
     socket.current.on("receive-message", (data) => {
-      setMessages([...messages, data.textSend])
-      console.log(messages)
+      console.log("form socket", data)
+      setMessages([...messages, data])
     })
-  }, [sendMessage])
+  }, [messages])
 
   const newMessage = (event) => {
     event.preventDefault()
@@ -57,7 +59,7 @@ const ChatBox = ({
     })
       .then((data) => {
         setMessages([...messages, data.data])
-        socket.current.emit("send-message", messages)
+        socket.current.emit("send-message", data.data)
       })
       .catch((err) => {
         console.log("error sending", err)

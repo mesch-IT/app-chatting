@@ -25,7 +25,6 @@ const AddUser = () => {
       let body = {
         username,
         password,
-        confirmPassword,
       }
       axios({
         method: "post",

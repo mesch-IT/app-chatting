@@ -20,9 +20,6 @@ router.post("/register",[
     check("password").notEmpty()
         .withMessage('password is required')
         .isLength({ min: 4 })
-        .withMessage('password must be at least 4 characters'),
-    check("confirmPassword").notEmpty()
-        .withMessage('confirm password is required')
-],addUser)
+        .withMessage('password must be at least 4 characters')],addUser)
 
 module.exports = router
