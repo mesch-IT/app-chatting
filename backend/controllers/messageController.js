@@ -3,12 +3,13 @@ const MessageModel = require('../models/messageModel')
 
 const addMessage = (req, res) => {
 
-    const { chatId, senderId, text } = req.body
+    const { chatId, senderId, text, urlImageDb } = req.body
 
     const newMessage = new MessageModel({
         chatId,
         senderId,
-        text
+        text,
+        urlImageDb
     })
     newMessage.save()
         .then((data) => {

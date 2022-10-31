@@ -18,48 +18,60 @@ const ChatBox = ({
 }) => {
   const [sendMessage, setSendMessage] = useState("")
   //const [onlineUsers, setOnlineUsers] = useState([])
-  const [socketData, setSocketData] = useState({
-    textSend: "",
-    receiverId: "",
-  })
+  const [imageUrl, setImageUrl] = useState({})
+  const [fileChosen, setFileChosen] = useState(false)
   const socket = useRef()
 
   useEffect(() => {
     socket.current = io("http://localhost:8800")
+    console.log("chat", chat)
 
     socket.current.emit("new-user", currentUser)
+    socket.current.emit("join-room", chat)
 
     // socket.current.on("get-users", (users) => {
     //  // setOnlineUsers(users)
     // })
-  }, [currentUser])
+  }, [chat])
 
   // // send message to socket server
-
-  useEffect(() => {
-    if (socketData.textSend !== "") {
-      socket.current.emit("send-message", socketData)
-    }
-  }, [socketData])
 
   // receive message from socket server
 
   useEffect(() => {
     socket.current.on("receive-message", (data) => {
-      setMessages([...messages, data.textSend])
-      console.log(messages)
+      setMessages([...messages, data])
     })
-  }, [sendMessage])
+  }, [messages])
 
-  const newMessage = (event) => {
+  const keepImage = (file) => {
+    setImageUrl(file[0])
+    setFileChosen(true)
+  }
+
+  const newMessage = async (event) => {
     event.preventDefault()
+    let response, urlImageCloud
+    if (fileChosen) {
+      const formData = new FormData()
+      formData.append("file", imageUrl)
+      formData.append("upload_preset", "myImage")
+      console.log("formData", imageUrl.name)
+      response = await axios({
+        method: "POST",
+        url: "https://api.cloudinary.com/v1_1/deuutxkyz/image/upload",
+        data: formData,
+      })
 
+      urlImageCloud = response.data.secure_url
+      console.log(urlImageCloud)
+    }
     let body = {
       chatId: chat,
       senderId: currentUser,
       text: sendMessage,
+      urlImageDb: urlImageCloud,
     }
-
     axios({
       method: "POST",
       url: `http://localhost:3001/message/newMessage`,
@@ -67,18 +79,15 @@ const ChatBox = ({
     })
       .then((data) => {
         setMessages([...messages, data.data])
-        setSocketData((prevState) => ({
-          ...prevState,
-          textSend: data.data.text,
-          // eslint-disable-next-line react/prop-types
-          receiverId: userSelected._id,
-        }))
+        socket.current.emit("send-message", data.data)
       })
       .catch((err) => {
         console.log("error sending", err)
       })
 
     setSendMessage("")
+    setFileChosen(false)
+    setImageUrl("")
   }
 
   // eslint-disable-next-line react/prop-types
@@ -92,6 +101,9 @@ const ChatBox = ({
       <div key={message._id} className={statutMessage}>
         <div className="message">{message.text}</div>
         <div className="timestamp">{date}</div>
+        <div>
+          <img src={message.urlImageDb} alt="" className="send-image" />
+        </div>
       </div>
     )
   })
@@ -123,7 +135,18 @@ const ChatBox = ({
                   }}
                 />
                 <div className="camera">
-                  <i className="las la-camera"></i>
+                  <label htmlFor="image">
+                    <i className="las la-camera"></i>
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    id="image"
+                    onChange={(event) => {
+                      keepImage(event.target.files)
+                    }}
+                  />
                 </div>
               </div>
               <button type="submit" className="btn-core">
