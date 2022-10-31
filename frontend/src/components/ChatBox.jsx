@@ -18,6 +18,7 @@ const ChatBox = ({
 }) => {
   const [sendMessage, setSendMessage] = useState("")
   //const [onlineUsers, setOnlineUsers] = useState([])
+  const [imageUrl, setImageUrl] = useState({})
   const socket = useRef()
 
   useEffect(() => {
@@ -38,20 +39,33 @@ const ChatBox = ({
 
   useEffect(() => {
     socket.current.on("receive-message", (data) => {
-      console.log("form socket", data)
       setMessages([...messages, data])
     })
   }, [messages])
 
-  const newMessage = (event) => {
+  const keepImage = (file) => {
+    setImageUrl(file[0])
+  }
+
+  const newMessage = async (event) => {
     event.preventDefault()
+    const formData = new FormData()
+    formData.append("file", imageUrl)
+    formData.append("upload_preset", "myImage")
+    let response = await axios({
+      method: "POST",
+      url: "https://api.cloudinary.com/v1_1/deuutxkyz/image/upload",
+      data: formData,
+    })
+
+    let urlImageCloud = response.data.secure_url
 
     let body = {
       chatId: chat,
       senderId: currentUser,
       text: sendMessage,
+      urlImageDb: urlImageCloud,
     }
-
     axios({
       method: "POST",
       url: `http://localhost:3001/message/newMessage`,
@@ -79,6 +93,9 @@ const ChatBox = ({
       <div key={message._id} className={statutMessage}>
         <div className="message">{message.text}</div>
         <div className="timestamp">{date}</div>
+        <div>
+          <img src={message.urlImageDb} alt="" className="send-image" />
+        </div>
       </div>
     )
   })
@@ -110,7 +127,18 @@ const ChatBox = ({
                   }}
                 />
                 <div className="camera">
-                  <i className="las la-camera"></i>
+                  <label htmlFor="image">
+                    <i className="las la-camera"></i>
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    id="image"
+                    onChange={(event) => {
+                      keepImage(event.target.files)
+                    }}
+                  />
                 </div>
               </div>
               <button type="submit" className="btn-core">

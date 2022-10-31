@@ -9,6 +9,9 @@ const messageSchema = new Schema({
     },
     text: {
         type : String
+    },
+    urlImageDb: {
+      type : String   
     }
 },
     {
