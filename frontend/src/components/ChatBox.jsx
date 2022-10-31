@@ -19,6 +19,7 @@ const ChatBox = ({
   const [sendMessage, setSendMessage] = useState("")
   //const [onlineUsers, setOnlineUsers] = useState([])
   const [imageUrl, setImageUrl] = useState({})
+  const [fileChosen, setFileChosen] = useState(false)
   const socket = useRef()
 
   useEffect(() => {
@@ -45,21 +46,26 @@ const ChatBox = ({
 
   const keepImage = (file) => {
     setImageUrl(file[0])
+    setFileChosen(true)
   }
 
   const newMessage = async (event) => {
     event.preventDefault()
-    const formData = new FormData()
-    formData.append("file", imageUrl)
-    formData.append("upload_preset", "myImage")
-    let response = await axios({
-      method: "POST",
-      url: "https://api.cloudinary.com/v1_1/deuutxkyz/image/upload",
-      data: formData,
-    })
+    let response, urlImageCloud
+    if (fileChosen) {
+      const formData = new FormData()
+      formData.append("file", imageUrl)
+      formData.append("upload_preset", "myImage")
+      console.log("formData", imageUrl.name)
+      response = await axios({
+        method: "POST",
+        url: "https://api.cloudinary.com/v1_1/deuutxkyz/image/upload",
+        data: formData,
+      })
 
-    let urlImageCloud = response.data.secure_url
-
+      urlImageCloud = response.data.secure_url
+      console.log(urlImageCloud)
+    }
     let body = {
       chatId: chat,
       senderId: currentUser,
@@ -80,6 +86,8 @@ const ChatBox = ({
       })
 
     setSendMessage("")
+    setFileChosen(false)
+    setImageUrl("")
   }
 
   // eslint-disable-next-line react/prop-types
