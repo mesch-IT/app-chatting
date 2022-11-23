@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import axios from "axios"
 import React from "react"
 import profile from "../img/contact.png"
@@ -9,6 +10,7 @@ const AllUsers = ({
   currentUser,
   setChat,
   setMessages,
+  userSearch,
 }) => {
   const selectUser = (user) => {
     setShowChat(true)
@@ -23,7 +25,6 @@ const AllUsers = ({
           setChat(data.data.messages[0].chatId)
         }
         if (data.data.messages.length == 0) {
-          console.log(data.data)
           setMessages(data.data.messages)
           setChat(data.data.chatId)
         }
@@ -32,21 +33,32 @@ const AllUsers = ({
         console.log("error to get chat", err)
       })
   }
-
-  const users = allUsers?.data?.map((user) => {
+  if (userSearch) {
     return (
-      <div key={user._id} className="user" onClick={() => selectUser(user)}>
+      <div className="user" onClick={() => selectUser(userSearch)}>
         <div className="profile_mini">
           <img src={profile} alt="" className="cover" />
         </div>
         <div className="chatt_details">
-          <div className="bold">{user?.username}</div>
+          <div className="bold">{userSearch.username}</div>
         </div>
       </div>
     )
-  })
-
-  return users
+  } else {
+    const users = allUsers?.data?.map((user) => {
+      return (
+        <div key={user._id} className="user" onClick={() => selectUser(user)}>
+          <div className="profile_mini">
+            <img src={profile} alt="" className="cover" />
+          </div>
+          <div className="chatt_details">
+            <div className="bold">{user?.username}</div>
+          </div>
+        </div>
+      )
+    })
+    return users
+  }
 }
 
 export default AllUsers

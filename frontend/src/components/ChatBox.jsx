@@ -24,7 +24,6 @@ const ChatBox = ({
 
   useEffect(() => {
     socket.current = io("http://localhost:8800")
-    console.log("chat", chat)
 
     socket.current.emit("new-user", currentUser)
     socket.current.emit("join-room", chat)
