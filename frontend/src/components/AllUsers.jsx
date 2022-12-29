@@ -48,9 +48,16 @@ const AllUsers = ({
     const users = allUsers?.data?.map((user) => {
       return (
         <div key={user._id} className="user" onClick={() => selectUser(user)}>
-          <div className="profile_mini">
-            <img src={profile} alt="" className="cover" />
-          </div>
+          {user.urlAvatar ? (
+            <div className="profile_minimum">
+              <img src={user.urlAvatar} alt="" className="cover" />
+            </div>
+          ) : (
+            <div className="profile_minimum">
+              <img src={profile} alt="" className="cover" />
+            </div>
+          )}
+
           <div className="chatt_details">
             <div className="bold">{user?.username}</div>
           </div>

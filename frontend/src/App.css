@@ -156,7 +156,7 @@ img.cover {
 .search i {
   width: 40px;
   text-align: center;
-  cursor: pointer;
+  
 }
 
 .search input {
@@ -303,8 +303,11 @@ img.cover {
 .send-image {
   width: 75%;
 }
-.la-camera {
+.profile-pic {
   cursor: pointer;
+}
+.profile-pic:hover {
+  color: rgb(28, 95, 218);
 }
 
 .chatt_body .timestamp {
@@ -323,4 +326,11 @@ img.cover {
 
   color: #1966FF;
   cursor: pointer;
+}
+.form-card .avatar {
+  display: flex; 
+  justify-content: space-around;
+}
+.form-card .profile-pic {
+  font-size: 1em;
 }
