@@ -16,6 +16,8 @@ const Home = () => {
   const [userSelected, setUserSelected] = useState({})
   const [chat, setChat] = useState("")
   const [messages, setMessages] = useState([])
+  const [textSearch, setTextSearch] = useState("")
+  const [userSearch, setUserSearch] = useState("")
 
   // connexion to home page
   if (user) {
@@ -70,9 +72,14 @@ const Home = () => {
 
   const logout = () => {
     localStorage.removeItem("user")
-    navigate("/users/login")
+    navigate("/")
   }
-
+  const handleSearch = (event) => {
+    if (event.keyCode === 13) {
+      // event.preventDefault()
+      setUserSearch(allUsers.data.find((user) => user.username === textSearch))
+    }
+  }
   return (
     <>
       <div className="app_wrapper">
@@ -101,7 +108,15 @@ const Home = () => {
         <div className="user_list">
           <div className="search">
             <i className="las la-search"></i>
-            <input type="text" className="input_blank" />
+            <input
+              type="text"
+              className="input_blank"
+              value={textSearch}
+              onChange={(event) => {
+                setTextSearch(event.target.value)
+              }}
+              onKeyDown={handleSearch}
+            />
             <i className="las la-ellipsis-v"></i>
           </div>
 
@@ -118,6 +133,7 @@ const Home = () => {
               chat={chat}
               setMessages={setMessages}
               messages={messages}
+              userSearch={userSearch}
             />
           </div>
         </div>

@@ -10,6 +10,7 @@ io.on("connection", (socket) => {
 
     socket.on("join-room", (chatId) => {
         socket.join(chatId)
+        console.log("chat joined",chatId)
     })
 
     socket.on("send-message", (message) => { 

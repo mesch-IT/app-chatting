@@ -296,6 +296,16 @@ img.cover {
   background: rgb(28, 95, 218);
   color: white;
 }
+#image {
+  display: none;
+ 
+}
+.send-image {
+  width: 75%;
+}
+.la-camera {
+  cursor: pointer;
+}
 
 .chatt_body .timestamp {
   color: rgb(182, 182, 182);
