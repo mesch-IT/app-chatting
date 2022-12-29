@@ -72,7 +72,7 @@ const Home = () => {
 
   const logout = () => {
     localStorage.removeItem("user")
-    navigate("/users/login")
+    navigate("/")
   }
   const handleSearch = (event) => {
     if (event.keyCode === 13) {
