@@ -71,18 +71,20 @@ const ChatBox = ({
       text: sendMessage,
       urlImageDb: urlImageCloud,
     }
-    axios({
-      method: "POST",
-      url: `http://localhost:3001/message/newMessage`,
-      data: body,
-    })
-      .then((data) => {
-        setMessages([...messages, data.data])
-        socket.current.emit("send-message", data.data)
+    if (body.text.length > 0 || body.urlImageDb?.length > 0) {
+      axios({
+        method: "POST",
+        url: `http://localhost:3001/message/newMessage`,
+        data: body,
       })
-      .catch((err) => {
-        console.log("error sending", err)
-      })
+        .then((data) => {
+          setMessages([...messages, data.data])
+          socket.current.emit("send-message", data.data)
+        })
+        .catch((err) => {
+          console.log("error sending", err)
+        })
+    }
 
     setSendMessage("")
     setFileChosen(false)
@@ -98,7 +100,7 @@ const ChatBox = ({
 
     return (
       <div key={message._id} className={statutMessage}>
-        <div className="message">{message.text}</div>
+        {message.text ? <div className="message">{message.text}</div> : null}
         <div className="timestamp">{date}</div>
         <div>
           <img src={message.urlImageDb} alt="" className="send-image" />
