@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import axios from "axios"
 import React, { useEffect, useRef, useState } from "react"
-import profile from "../img/contact.png"
 import { io } from "socket.io-client"
 import ScrollToBottom from "react-scroll-to-bottom"
-
+import profile from "../img/contact.png"
 const ChatBox = ({
   userSelected,
   // eslint-disable-next-line react/prop-types
@@ -55,7 +54,6 @@ const ChatBox = ({
       const formData = new FormData()
       formData.append("file", imageUrl)
       formData.append("upload_preset", "myImage")
-      console.log("formData", imageUrl.name)
       response = await axios({
         method: "POST",
         url: "https://api.cloudinary.com/v1_1/deuutxkyz/image/upload",
@@ -63,7 +61,6 @@ const ChatBox = ({
       })
 
       urlImageCloud = response.data.secure_url
-      console.log(urlImageCloud)
     }
     let body = {
       chatId: chat,
@@ -113,9 +110,15 @@ const ChatBox = ({
       {/* <!-- the chatt component like --> */}
       <div className="chatt_box">
         <div className="chatt_header">
-          <div className="profile_mini">
-            <img src={profile} alt="" className="cover" />
-          </div>
+          {userSelected.urlAvatar ? (
+            <div className="profile_minimum">
+              <img src={userSelected.urlAvatar} alt="" className="cover" />
+            </div>
+          ) : (
+            <div className="profile_minimum">
+              <img src={profile} alt="" className="cover" />
+            </div>
+          )}
           <div className="chatting_name">
             <div className="bold fs-5 mb-0">{userSelected.username}</div>
             <span className="small_light">Online</span>

@@ -1,13 +1,13 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import profile from "../img/contact.png"
 import AllUsers from "./AllUsers"
 import ChatBox from "./ChatBox"
+import profile from "../img/contact.png"
 
 const Home = () => {
   let navigate = useNavigate()
-  let token, currentUser
+  let token, currentUser, profileUser
 
   const user = JSON.parse(localStorage.getItem("user"))
 
@@ -23,6 +23,7 @@ const Home = () => {
   if (user) {
     token = user.data.token
     currentUser = user.data.id
+    profileUser = user.data.userAvatar
   }
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const Home = () => {
       })
       .catch((err) => {
         console.log("errors", err)
-        navigate("/users/login")
+        navigate("/")
       })
   }, [])
 
@@ -86,9 +87,15 @@ const Home = () => {
         {/* <!-- the side bard component like --> */}
         <div className="sidebar">
           <div className="top_sidebar">
-            <div className="profile_minimum">
-              <img src={profile} alt="" className="cover" />
-            </div>
+            {profileUser ? (
+              <div className="profile_minimum">
+                <img src={profileUser} alt="" className="cover" />
+              </div>
+            ) : (
+              <div className="profile_minimum">
+                <img src={profile} alt="" className="cover" />
+              </div>
+            )}
 
             <div className="side_list">
               <div className="list">

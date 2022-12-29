@@ -54,6 +54,7 @@ const login = (req, res) => {
                     message: "login successfully",
                     token: "Bearer " + token,
                     user: user.username,
+                    userAvatar: user.urlAvatar,
                     id : user._id
                 })
             }
@@ -68,6 +69,8 @@ const login = (req, res) => {
 }
 
 const secretRoute = (req, res) => { 
+
+    
     
     return res.status(200)
                
