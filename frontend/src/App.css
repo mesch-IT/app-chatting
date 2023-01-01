@@ -104,6 +104,7 @@ a:hover {
   align-items: flex-start;
   padding: 20px 35px;
   background: rgb(226, 226, 226);
+    overflow-y: scroll;
 }
 
 .sidebar {
@@ -176,7 +177,6 @@ img.cover {
   border-radius: 15px;
   padding: 15px;
   max-height: 100%;
-  overflow: hidden;
 }
 
 .profile_mini {
@@ -333,4 +333,7 @@ img.cover {
 }
 .form-card .profile-pic {
   font-size: 1em;
+}
+#camera-send:hover {
+  cursor: pointer;
 }

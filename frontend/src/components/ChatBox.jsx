@@ -4,7 +4,9 @@ import React, { useEffect, useRef, useState } from "react"
 import { io } from "socket.io-client"
 import ScrollToBottom from "react-scroll-to-bottom"
 import profile from "../img/contact.png"
+import Loader from "./Loader"
 const ChatBox = ({
+  isLoadingMessage,
   userSelected,
   // eslint-disable-next-line react/prop-types
   currentUser,
@@ -124,7 +126,11 @@ const ChatBox = ({
             <span className="small_light">Online</span>
           </div>
         </div>
-        <ScrollToBottom className="chatt_body">{allMessages}</ScrollToBottom>
+        {isLoadingMessage ? (
+          <Loader />
+        ) : (
+          <ScrollToBottom className="chatt_body">{allMessages}</ScrollToBottom>
+        )}
         <form action="" onSubmit={newMessage}>
           <div className="chatt_footer">
             <div className="d-flex align-items-start">
@@ -140,7 +146,7 @@ const ChatBox = ({
                 />
                 <div className="camera">
                   <label htmlFor="image">
-                    <i className="las la-camera"></i>
+                    <i className="las la-camera" id="camera-send"></i>
                   </label>
                 </div>
                 <div>
