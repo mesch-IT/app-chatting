@@ -4,6 +4,7 @@ import React from "react"
 import profile from "../img/contact.png"
 
 const AllUsers = ({
+  setIsLoadingMessage,
   setShowChat,
   allUsers,
   setUserSelected,
@@ -15,6 +16,7 @@ const AllUsers = ({
   const selectUser = (user) => {
     setShowChat(true)
     setUserSelected(user)
+    setIsLoadingMessage(true)
     axios({
       method: "POST",
       url: `http://localhost:3001/chat/${currentUser}/${user._id}`,
@@ -23,10 +25,12 @@ const AllUsers = ({
         if (data.data.messages.length > 0) {
           setMessages(data.data.messages)
           setChat(data.data.messages[0].chatId)
+          setIsLoadingMessage(false)
         }
         if (data.data.messages.length == 0) {
           setMessages(data.data.messages)
           setChat(data.data.chatId)
+          setIsLoadingMessage(false)
         }
       })
       .catch((err) => {

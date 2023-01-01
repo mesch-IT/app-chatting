@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import AllUsers from "./AllUsers"
 import ChatBox from "./ChatBox"
 import profile from "../img/contact.png"
+import Loader from "./Loader"
 
 const Home = () => {
   let navigate = useNavigate()
@@ -18,6 +19,8 @@ const Home = () => {
   const [messages, setMessages] = useState([])
   const [textSearch, setTextSearch] = useState("")
   const [userSearch, setUserSearch] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingMessage, setIsLoadingMessage] = useState(false)
 
   // connexion to home page
   if (user) {
@@ -59,12 +62,14 @@ const Home = () => {
   // }, [currentUser])
   // get all users
   useEffect(() => {
+    setIsLoading(true)
     axios({
       method: "GET",
       url: `http://localhost:3001/users/${currentUser}`,
     })
       .then((users) => {
         setAllUsers(users)
+        setIsLoading(false)
       })
       .catch((err) => {
         console.log("we can't get users", err)
@@ -129,24 +134,29 @@ const Home = () => {
 
           <div className="recent_users">
             <h5 className="little_title mb-4">All users</h5>
-
-            <AllUsers
-              currentUser={currentUser}
-              setShowChat={setShowChat}
-              allUsers={allUsers}
-              setUserSelected={setUserSelected}
-              userSelected={userSelected}
-              setChat={setChat}
-              chat={chat}
-              setMessages={setMessages}
-              messages={messages}
-              userSearch={userSearch}
-            />
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <AllUsers
+                setIsLoadingMessage={setIsLoadingMessage}
+                currentUser={currentUser}
+                setShowChat={setShowChat}
+                allUsers={allUsers}
+                setUserSelected={setUserSelected}
+                userSelected={userSelected}
+                setChat={setChat}
+                chat={chat}
+                setMessages={setMessages}
+                messages={messages}
+                userSearch={userSearch}
+              />
+            )}
           </div>
         </div>
 
         {showChat && (
           <ChatBox
+            isLoadingMessage={isLoadingMessage}
             userSelected={userSelected}
             currentUser={currentUser}
             setMessages={setMessages}
