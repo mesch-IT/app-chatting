@@ -70,7 +70,7 @@ const ChatBox = ({
       text: sendMessage,
       urlImageDb: urlImageCloud,
     }
-    if (body.text.length > 0 || body.urlImageDb?.length > 0) {
+    if (body.text.trim().length > 0 || body.urlImageDb?.length > 0) {
       axios({
         method: "POST",
         url: `http://localhost:3001/message/newMessage`,
