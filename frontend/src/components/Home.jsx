@@ -18,7 +18,7 @@ const Home = () => {
   const [chat, setChat] = useState("")
   const [messages, setMessages] = useState([])
   const [textSearch, setTextSearch] = useState("")
-  const [userSearch, setUserSearch] = useState("")
+  // const [userSearch, setUserSearch] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingMessage, setIsLoadingMessage] = useState(false)
 
@@ -81,10 +81,7 @@ const Home = () => {
     navigate("/")
   }
   const handleSearch = (event) => {
-    if (event.keyCode === 13) {
-      // event.preventDefault()
-      setUserSearch(allUsers.data.find((user) => user.username === textSearch))
-    }
+    setTextSearch(event.target.value)
   }
   return (
     <>
@@ -124,10 +121,8 @@ const Home = () => {
               type="text"
               className="input_blank"
               value={textSearch}
-              onChange={(event) => {
-                setTextSearch(event.target.value)
-              }}
-              onKeyDown={handleSearch}
+              onChange={handleSearch}
+              // onKeyDown={handleSearch}
             />
             <i className="las la-ellipsis-v"></i>
           </div>
@@ -148,7 +143,8 @@ const Home = () => {
                 chat={chat}
                 setMessages={setMessages}
                 messages={messages}
-                userSearch={userSearch}
+                // userSearch={userSearch}
+                textSearch={textSearch}
               />
             )}
           </div>

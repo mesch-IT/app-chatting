@@ -38,6 +38,7 @@ const AllUsers = ({
       })
   }
   if (userSearch) {
+    console.log("searc", userSearch)
     return (
       <div className="user" onClick={() => selectUser(userSearch)}>
         <div className="profile_mini">

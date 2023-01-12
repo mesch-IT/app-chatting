@@ -52,11 +52,11 @@ const AddUser = () => {
       })
         .then((res) => {
           console.log("res", res)
+          navigate("/")
         })
         .catch((err) => {
           console.log("err", err)
         })
-      navigate("/")
     }
     setUsername("")
     setPassword("")
