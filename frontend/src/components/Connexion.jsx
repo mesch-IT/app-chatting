@@ -7,28 +7,40 @@ const Connexion = () => {
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [fillField, setFillField] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const login = (event) => {
     event.preventDefault()
 
-    console.log(password)
-
-    let body = {
-      username,
-      password,
+    if (username == "" || password == "") {
+      setFillField(!fillField)
+      setErrorMessage("Please fill all fields!")
+      setTimeout(function () {
+        window.location.reload()
+      }, 1000)
+    } else {
+      let body = {
+        username,
+        password,
+      }
+      axios({
+        method: "POST",
+        url: "http://localhost:3001/users/login",
+        data: body,
+      })
+        .then((user) => {
+          localStorage.setItem("user", JSON.stringify(user))
+          navigate("/users/home")
+        })
+        .catch(() => {
+          setFillField(!fillField)
+          setErrorMessage("Password or username incorrect!")
+          setTimeout(function () {
+            window.location.reload()
+          }, 1000)
+        })
     }
-    axios({
-      method: "POST",
-      url: "http://localhost:3001/users/login",
-      data: body,
-    })
-      .then((user) => {
-        localStorage.setItem("user", JSON.stringify(user))
-        navigate("/users/home")
-      })
-      .catch((err) => {
-        console.log("you are not logged in", err)
-      })
   }
 
   const createAccount = () => {
@@ -37,6 +49,11 @@ const Connexion = () => {
 
   return (
     <div className="main">
+      {fillField && (
+        <div className="alert alert-primary " role="alert">
+          {errorMessage}
+        </div>
+      )}
       <img src="girl-logging.svg" className="img-illustration" alt="" />
       <div className="form-card">
         <h1 className="title">Welcome to our chat app</h1>
