@@ -11,6 +11,8 @@ const AddUser = () => {
   const [avatarProfile, setAvatarProfile] = useState("")
   const [fileChosen, setFileChosen] = useState(false)
   const [imageUrl, setImageUrl] = useState({})
+  const [fillField, setFillField] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const register = async (event) => {
     event.preventDefault()
@@ -24,7 +26,29 @@ const AddUser = () => {
       setUsername("")
       setPassword("")
       setConfirmPassword("")
-      console.log("veuillez remplir tous les champs")
+      setFillField(!fillField)
+      setErrorMessage("Please fill all fields!")
+      setTimeout(function () {
+        window.location.reload()
+      }, 1000)
+    } else if (password != confirmPassword) {
+      setFillField(!fillField)
+      setErrorMessage("passoword doesn't match !")
+      setTimeout(function () {
+        window.location.reload()
+      }, 1000)
+    } else if (username.trim().length < 3) {
+      setFillField(!fillField)
+      setErrorMessage("please username must have at least 3 characters !")
+      setTimeout(function () {
+        window.location.reload()
+      }, 1000)
+    } else if (password.trim().length < 4) {
+      setFillField(!fillField)
+      setErrorMessage("please password must have at least 4 characters !")
+      setTimeout(function () {
+        window.location.reload()
+      }, 1000)
     } else {
       let response, urlAvatar
       if (fileChosen) {
@@ -39,7 +63,6 @@ const AddUser = () => {
 
         urlAvatar = response.data.secure_url
       }
-      console.log("url", urlAvatar)
       let body = {
         username,
         password,
@@ -55,7 +78,7 @@ const AddUser = () => {
           navigate("/")
         })
         .catch((err) => {
-          console.log("err", err)
+          console.log("err", err.response)
         })
     }
     setUsername("")
@@ -68,9 +91,13 @@ const AddUser = () => {
     setImageUrl(file[0])
     setFileChosen(true)
   }
-
   return (
     <div className="main">
+      {fillField && (
+        <div className="alert alert-primary " role="alert">
+          {errorMessage}
+        </div>
+      )}
       <div className="form-card">
         <h1 className="title">Create your account</h1>
         <form onSubmit={register}>
