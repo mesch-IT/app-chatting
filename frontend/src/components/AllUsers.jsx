@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import axios from "axios"
 import React from "react"
@@ -12,6 +13,7 @@ const AllUsers = ({
   setChat,
   setMessages,
   userSearch,
+  textSearch,
 }) => {
   const selectUser = (user) => {
     setShowChat(true)
@@ -37,18 +39,28 @@ const AllUsers = ({
         console.log("error to get chat", err)
       })
   }
-  if (userSearch) {
-    console.log("searc", userSearch)
-    return (
-      <div className="user" onClick={() => selectUser(userSearch)}>
-        <div className="profile_mini">
-          <img src={profile} alt="" className="cover" />
-        </div>
-        <div className="chatt_details">
-          <div className="bold">{userSearch.username}</div>
-        </div>
-      </div>
-    )
+  if (textSearch) {
+    const filteredUsers = allUsers.data
+      .filter((user) => {
+        return user.username.toLowerCase().includes(textSearch)
+      })
+      .map((user) => {
+        return (
+          <div
+            key={user._id}
+            className="user"
+            onClick={() => selectUser(userSearch)}
+          >
+            <div className="profile_mini">
+              <img src={profile} alt="" className="cover" />
+            </div>
+            <div className="chatt_details">
+              <div className="bold">{user.username}</div>
+            </div>
+          </div>
+        )
+      })
+    return filteredUsers
   } else {
     const users = allUsers?.data?.map((user) => {
       return (
