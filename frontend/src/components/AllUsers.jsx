@@ -14,6 +14,7 @@ const AllUsers = ({
   setMessages,
   userSearch,
   textSearch,
+  showAllUsers,
 }) => {
   const selectUser = (user) => {
     setShowChat(true)
@@ -39,7 +40,7 @@ const AllUsers = ({
         console.log("error to get chat", err)
       })
   }
-  if (textSearch) {
+  if (textSearch.trim()) {
     const filteredUsers = allUsers.data
       .filter((user) => {
         return user.username.toLowerCase().includes(textSearch)
@@ -61,7 +62,7 @@ const AllUsers = ({
         )
       })
     return filteredUsers
-  } else {
+  } else if (showAllUsers) {
     const users = allUsers?.data?.map((user) => {
       return (
         <div key={user._id} className="user" onClick={() => selectUser(user)}>

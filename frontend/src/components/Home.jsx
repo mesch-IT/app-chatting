@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom"
 import AllUsers from "./AllUsers"
 import ChatBox from "./ChatBox"
 import profile from "../img/contact.png"
+import chatIcon from "../img/chat.png"
+import users from "../img/users.svg"
 import Loader from "./Loader"
 
 const Home = () => {
@@ -21,6 +23,7 @@ const Home = () => {
   // const [userSearch, setUserSearch] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingMessage, setIsLoadingMessage] = useState(false)
+  const [showAllUsers, setShowAllUsers] = useState(false)
 
   // connexion to home page
   if (user) {
@@ -45,22 +48,6 @@ const Home = () => {
         navigate("/")
       })
   }, [])
-
-  // connexion to socket
-
-  // useEffect(() => {
-
-  //     socket.current = io("http://localhost:8800")
-
-  //     socket.current.emit("new-user", currentUser)
-
-  //     // socket.current.on("get-users", (users) => {
-  //     //     setOnlineUsers(users)
-
-  //     // })
-
-  // }, [currentUser])
-  // get all users
   useEffect(() => {
     setIsLoading(true)
     axios({
@@ -76,6 +63,9 @@ const Home = () => {
       })
   }, [])
 
+  const handleUsers = () => {
+    setShowAllUsers(true)
+  }
   const logout = () => {
     localStorage.removeItem("user")
     navigate("/")
@@ -105,7 +95,17 @@ const Home = () => {
               </div>
             </div>
           </div>
-
+          <div>
+            <img src={chatIcon} alt="" className="chat-icon" />
+          </div>
+          <div>
+            <img
+              src={users}
+              alt=""
+              className="chat-icon"
+              onClick={handleUsers}
+            />
+          </div>
           <div className="bottom_sidebar">
             <div className="sign_out" onClick={logout}>
               <i className="las la-sign-out-alt"></i>
@@ -143,8 +143,8 @@ const Home = () => {
                 chat={chat}
                 setMessages={setMessages}
                 messages={messages}
-                // userSearch={userSearch}
                 textSearch={textSearch}
+                showAllUsers={showAllUsers}
               />
             )}
           </div>
