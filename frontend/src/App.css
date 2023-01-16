@@ -133,6 +133,14 @@ img.cover {
   object-fit: cover;
 }
 
+.chat-icon {
+    width: 70%;
+      height: 70%;
+ 
+}
+.chat-icon:hover {
+  cursor: pointer;
+}
 .sign_out {
   font-size: 1.7rem;
   cursor: pointer;
